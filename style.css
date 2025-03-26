@@ -387,10 +387,16 @@ header h1 {
         font-size: 2.3em;
         line-height: 1.25;
     }
-    .message, .hidden-message p, #reasons-list li {
+    .message /* Общие стили текста для мобильных */ {
         font-size: 1.0em;
         line-height: 1.7;
     }
+    /* Применяем тот же базовый размер и к другим текстовым блокам */
+    .hidden-message p {
+         font-size: 1.0em;
+         line-height: 1.7;
+    }
+
     #specialButton {
         padding: 18px 35px; /* Удобнее для пальца */
         font-size: 1.15em;
@@ -408,6 +414,19 @@ header h1 {
     .hidden-message h2, .reasons-container h2 {
         font-size: 1.6em;
     }
+
+    /* --- Стили для списка причин на мобильных --- */
+    #reasons-list li {
+        font-size: 1.0em; /* Базовый мобильный размер шрифта */
+        line-height: 1.7; /* Увеличенный интервал */
+
+        /* --- ИСПРАВЛЕНИЕ: Гарантируем отображение всего текста --- */
+        overflow: visible !important; /* Показываем любой контент, выходящий за границы */
+        height: auto !important;     /* Позволяем элементу иметь любую нужную высоту */
+        /* ---------------------------------------------------------- */
+    }
+    /* ------------------------------------------- */
+
     .signature {
         font-size: 1.1em;
     }
