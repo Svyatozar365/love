@@ -1,136 +1,271 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@300;400;700&display=swap'); /* Импортируем красивые шрифты */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    /* Определим основные цвета для легкой смены */
+    --bg-start: #ffe4e9; /* Нежно-розовый */
+    --bg-end: #fad0c4; /* Персиково-розовый */
+    --primary-pink: #e91e63;
+    --secondary-pink: #ff4081;
+    --dark-pink: #d81b60;
+    --light-pink-bg: #fff5f7;
+    --text-dark: #333;
+    --text-medium: #555;
+    --text-light: #777;
+}
 
 body {
     margin: 0;
     padding: 20px;
-    font-family: 'Roboto', sans-serif; /* Основной шрифт */
-    background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%); /* Нежный градиентный фон */
-    color: #333;
+    font-family: 'Roboto', sans-serif;
+    /* Анимированный градиентный фон */
+    background: linear-gradient(135deg, var(--bg-start), var(--bg-end), var(--bg-start));
+    background-size: 200% 200%; /* Увеличиваем размер для анимации */
+    animation: gradientShift 15s ease infinite;
+    color: var(--text-dark);
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Чтобы контейнер был по центру даже если мало контента */
+    min-height: 100vh;
     box-sizing: border-box;
+    overflow: hidden; /* Скрываем возможный скролл от фоновых сердечек */
+    position: relative; /* Для позиционирования фоновых элементов */
 }
 
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Фоновые сердечки --- */
+.background-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; /* Ниже основного контента */
+    pointer-events: none; /* Не мешают кликам */
+}
+
+.background-hearts span {
+    position: absolute;
+    bottom: -50px; /* Начинают снизу */
+    font-size: 20px;
+    opacity: 0;
+    animation: floatHeart 10s linear infinite;
+    color: rgba(255, 192, 203, 0.5); /* Полупрозрачный розовый */
+}
+
+/* Разное положение и задержки для сердечек */
+.background-hearts span:nth-child(1) { left: 10%; animation-delay: 0s; font-size: 18px; }
+.background-hearts span:nth-child(2) { left: 30%; animation-delay: 2s; font-size: 22px; }
+.background-hearts span:nth-child(3) { left: 50%; animation-delay: 5s; font-size: 16px; }
+.background-hearts span:nth-child(4) { left: 70%; animation-delay: 1s; font-size: 24px; }
+.background-hearts span:nth-child(5) { left: 90%; animation-delay: 3s; font-size: 20px; }
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(360deg); /* Улетают вверх и крутятся */
+        opacity: 0;
+    }
+}
+
+/* --- Контейнер --- */
 .container {
-    background-color: rgba(255, 255, 255, 0.95); /* Полупрозрачный белый фон */
-    padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.97); /* Чуть менее прозрачный */
+    padding: 35px 45px;
+    border-radius: 20px; /* Более круглый */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     max-width: 650px;
     text-align: center;
-    transition: transform 0.3s ease; /* Плавный эффект при наведении */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative; /* Для z-index */
+    z-index: 2; /* Выше фоновых сердечек и канваса */
+    /* Анимация появления */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInSlideUp 0.8s ease forwards;
+    animation-delay: 0.3s; /* Небольшая задержка */
+}
+
+@keyframes fadeInSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .container:hover {
-    transform: scale(1.02); /* Немного увеличим при наведении */
+    transform: scale(1.03) translateY(-5px); /* Немного увеличим и приподнимем */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Заголовок --- */
 header h1 {
-    font-family: 'Lobster', cursive; /* Красивый шрифт для заголовка */
-    color: #e91e63; /* Ярко-розовый цвет */
-    font-size: 2.8em; /* Увеличим размер */
-    margin-bottom: 25px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    font-family: 'Lobster', cursive;
+    color: var(--primary-pink);
+    font-size: 3em; /* Еще чуть больше */
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.sparkle { /* Анимация для звездочки */
+.sparkle {
     display: inline-block;
     animation: sparklePulse 1.5s infinite ease-in-out;
+    color: #ffab40; /* Золотистый для звездочки */
+    margin: 0 5px; /* Небольшой отступ */
 }
 
 @keyframes sparklePulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); opacity: 0.7; }
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.4) rotate(15deg); opacity: 0.7; }
 }
 
+/* --- Основное сообщение --- */
 .message {
-    font-size: 1.1em;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 15px;
+    font-size: 1.15em; /* Чуть крупнее */
+    line-height: 1.8;
+    color: var(--text-medium);
+    margin-bottom: 20px;
 }
 
+/* --- Кнопка --- */
 #specialButton {
-    background-color: #ff4081; /* Яркий розовый */
+    background: linear-gradient(45deg, var(--secondary-pink), var(--primary-pink)); /* Градиент на кнопке */
     color: white;
     border: none;
-    padding: 15px 30px;
-    font-size: 1.1em;
+    padding: 16px 35px; /* Увеличим padding */
+    font-size: 1.15em;
     font-weight: bold;
-    border-radius: 30px; /* Сильно скругленные углы */
+    border-radius: 35px; /* Еще круглее */
     cursor: pointer;
-    margin-top: 25px;
-    margin-bottom: 30px;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
-    box-shadow: 0 4px 10px rgba(233, 30, 99, 0.4);
+    margin-top: 30px;
+    margin-bottom: 35px;
+    transition: all 0.3s ease; /* Анимируем все свойства */
+    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+    display: inline-flex; /* Для выравнивания иконки и текста */
+    align-items: center;
+    gap: 10px; /* Расстояние между иконкой и текстом */
+}
+
+#specialButton .button-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
 }
 
 #specialButton:hover {
-    background-color: #e91e63; /* Чуть темнее при наведении */
-    transform: translateY(-3px); /* Небольшой подъем */
-    box-shadow: 0 6px 15px rgba(233, 30, 99, 0.5);
+    background: linear-gradient(45deg, var(--primary-pink), var(--secondary-pink)); /* Инверсия градиента */
+    transform: translateY(-4px) scale(1.05); /* Сильнее подъем и увеличение */
+    box-shadow: 0 8px 20px rgba(233, 30, 99, 0.55);
+}
+
+#specialButton:hover .button-icon {
+    transform: scale(1.2) rotate(-10deg); /* Анимация иконки при наведении */
 }
 
 #specialButton:active {
-    transform: translateY(0); /* Возвращаем при нажатии */
+    transform: translateY(0) scale(1); /* Возвращаем при нажатии */
     box-shadow: 0 4px 10px rgba(233, 30, 99, 0.4);
 }
 
-/* Стили для скрытого сообщения */
+/* Стили для отключенной кнопки */
+#specialButton:disabled {
+    background: #cccccc;
+    opacity: 0.7;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+#specialButton:disabled .button-icon {
+    transform: none;
+}
+
+/* --- Скрытое сообщение --- */
 .hidden-message {
-    background-color: #fff1f4; /* Очень светлый розовый фон */
-    border-left: 5px solid #e91e63; /* Розовая полоска слева */
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 8px;
-    text-align: left; /* Выравнивание текста по левому краю внутри блока */
-    /* Изначально скрыто с помощью JS, но можно и через CSS */
+    background-color: var(--light-pink-bg);
+    /* Добавим нежный фоновый паттерн (опционально) */
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fce4ec' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+    border-left: 6px solid var(--primary-pink);
+    padding: 0 25px; /* Убираем верт. padding для анимации */
+    margin-top: 0; /* Убираем для анимации */
+    border-radius: 10px;
+    text-align: left;
     opacity: 0;
     max-height: 0;
     overflow: hidden;
-    transition: opacity 0.8s ease, max-height 0.8s ease, margin-top 0.8s ease, padding 0.8s ease; /* Плавное появление */
+    transition: all 0.9s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Упругая анимация */
+    box-shadow: 0 4px 10px rgba(0,0,0, 0.05); /* Легкая тень */
 }
 
-.hidden-message.visible { /* Класс, который добавим через JS */
+.hidden-message.visible {
     opacity: 1;
-    max-height: 500px; /* Достаточно большая высота для контента */
-    margin-top: 30px; /* Отодвинем от кнопки */
-    padding: 20px; /* Вернем padding */
+    max-height: 600px; /* Увеличим для надежности */
+    margin-top: 35px;
+    padding: 25px; /* Возвращаем padding */
 }
 
 .hidden-message h2 {
     font-family: 'Lobster', cursive;
-    color: #d81b60; /* Темнее розовый */
-    text-align: center; /* Заголовок по центру */
-    margin-bottom: 15px;
+    color: var(--dark-pink);
+    text-align: center;
+    font-size: 1.8em; /* Крупнее */
+    margin-bottom: 20px;
 }
 
 .hidden-message p {
-    color: #444;
-    line-height: 1.6;
-    font-size: 1.05em;
+    color: var(--text-medium); /* Чуть темнее для читаемости */
+    line-height: 1.7;
+    font-size: 1.1em;
+    margin-bottom: 15px; /* Отступ между параграфами */
 }
 
-.heart-animation { /* Анимация для сердечка в конце */
-    font-size: 2.5em;
+.hidden-message p:last-of-type {
+    margin-bottom: 0; /* Убираем нижний отступ у последнего параграфа перед сердцем */
+}
+
+.heart-animation {
+    font-size: 3em; /* Больше сердце */
     text-align: center;
-    margin-top: 15px;
+    margin-top: 25px;
     animation: heartBeat 1.2s infinite ease-in-out;
+    color: var(--secondary-pink); /* Цвет для сердца */
 }
 
 @keyframes heartBeat {
     0%, 100% { transform: scale(1); }
     10%, 30% { transform: scale(0.9); }
-    20%, 40%, 60%, 80% { transform: scale(1.1); }
+    20%, 40%, 60%, 80% { transform: scale(1.15); } /* Сильнее пульсация */
     50%, 70%, 90% { transform: scale(1.05); }
 }
 
+/* --- Подпись --- */
 .signature {
-    margin-top: 35px;
+    margin-top: 40px;
     font-size: 1em;
-    color: #777;
-    line-height: 1.5;
-    font-style: italic; /* Курсив для подписи */
+    color: var(--text-light);
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* --- Канвас для конфетти --- */
+#confetti-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Выше фона, ниже контента */
+    pointer-events: none; /* Не мешает взаимодействию */
 }
