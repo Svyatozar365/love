@@ -1,381 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@300;400;700&family=Pacifico&display=swap');
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днем Рождения, моя Люличка! ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Иконка для вкладки -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+</head>
+<body>
+    <!-- Контейнер для фоновых сердечек (для параллакса) -->
+    <div class="background-hearts">
+        <span>💖</span> <span>💕</span> <span>💗</span> <span>💓</span> <span>💞</span>
+        <span>✨</span> <span>❤️</span> <span>💖</span> <span>💕</span> <span>✨</span>
+    </div>
 
-:root {
-    --bg-start: #ffe4e9;
-    --bg-end: #fad0c4;
-    --primary-pink: #e91e63;
-    --secondary-pink: #ff80ab;
-    --dark-pink: #c2185b;
-    --light-pink-bg: #fff8fa;
-    --text-dark: #2c3e50;
-    --text-medium: #5f6a7d;
-    --text-light: #95a5a6;
-    --gold-sparkle: #ffcc80;
+    <!-- Канвас для конфетти -->
+    <canvas id="confetti-canvas"></canvas>
 
-    /* Курсор-сердечко (проверен синтаксис data URI) */
-    --cursor-heart: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23e91e63"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'), auto;
-}
+    <div class="container">
+        <header>
+            <h1>
+                <span class="sparkle ✨">✨</span>
+                С Днем Рождения, Любимая Люличка!
+                <span class="sparkle ✨">✨</span>
+            </h1>
+        </header>
 
-html {
-    cursor: var(--cursor-heart);
-}
+        <p class="message">
+            Моя драгоценная, сегодня твой особенный день! ✨<br>
+            Я создал это небольшое место, чтобы показать тебе частичку того,
+            как сильно я тебя люблю и как много ты для меня значишь.
+            Нажми на кнопку, когда будешь готова к маленькому сюрпризу... 😊
+        </p>
 
-body {
-    margin: 0;
-    padding: 20px;
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, var(--bg-start), var(--bg-end), var(--bg-start));
-    background-size: 250% 250%;
-    animation: gradientShift 18s ease infinite;
-    color: var(--text-dark);
-    display: flex; /* Важно для центрирования */
-    justify-content: center; /* Важно для центрирования */
-    align-items: center; /* Важно для центрирования */
-    min-height: 100vh; /* Важно для центрирования */
-    box-sizing: border-box;
-    overflow-x: hidden;
-    position: relative;
-}
+        <button id="specialButton">
+            <span class="button-icon">💖</span> Открыть сюрприз!
+        </button>
 
-/* Проверим, чтобы body точно был видимым */
-body.loaded {
-   visibility: visible; /* Добавлено на всякий случай */
-}
+        <!-- Начальное скрытое сообщение -->
+        <div id="hiddenMessage" class="hidden-message">
+            <h2>Мое Сердце - Твое!</h2>
+            <p>
+                Люличка, ты – самое светлое и прекрасное, что есть в моей жизни. 🌟
+                Каждый миг рядом с тобой – это бесценный дар. Твоя улыбка озаряет мой мир,
+                а твоя доброта делает его лучше.
+            </p>
+            <p>
+                Спасибо тебе за то, что ты есть, за твою любовь, за твою нежность,
+                за то, что делаешь меня самым счастливым человеком на свете! 🥰
+            </p>
+            <!-- Подсказка перед списком причин -->
+            <div id="reasons-prompt" style="opacity: 0; transition: opacity 1s 0.5s;">
+                <p style="text-align: center; margin-top: 25px; font-style: italic; color: var(--text-medium);">
+                    ...и это лишь начало. Вот еще несколько причин, почему моя любовь к тебе бесконечна:
+                </p>
+            </div>
+        </div>
 
-
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* --- Background Hearts --- */
-.background-hearts {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0; /* Ниже всего */
-    pointer-events: none;
-}
-
-.background-hearts span {
-    position: absolute;
-    bottom: -60px;
-    font-size: 22px;
-    opacity: 0;
-    animation: floatElement 12s linear infinite;
-    color: rgba(255, 192, 203, 0.4);
-}
-/* Variations... */
-.background-hearts span:nth-child(1) { left: 10%; animation-delay: 0s; font-size: 18px; }
-.background-hearts span:nth-child(2) { left: 20%; animation-delay: 2s; font-size: 25px; color: rgba(255, 223, 230, 0.5);}
-.background-hearts span:nth-child(3) { left: 35%; animation-delay: 5s; font-size: 16px; }
-.background-hearts span:nth-child(4) { left: 50%; animation-delay: 1s; font-size: 28px; color: rgba(255, 223, 230, 0.4);}
-.background-hearts span:nth-child(5) { left: 65%; animation-delay: 7s; font-size: 20px; }
-.background-hearts span:nth-child(6) { left: 80%; animation-delay: 3s; font-size: 23px; color: rgba(255, 192, 203, 0.3); }
-.background-hearts span:nth-child(7) { left: 90%; animation-delay: 6s; font-size: 19px; }
-.background-hearts span:nth-child(8) { left: 5%; animation-delay: 9s; font-size: 21px; color: rgba(255, 223, 230, 0.5);}
-.background-hearts span:nth-child(9) { left: 45%; animation-delay: 11s; font-size: 17px;}
-.background-hearts span:nth-child(10) { left: 75%; animation-delay: 4s; font-size: 26px; color: rgba(255, 192, 203, 0.35); }
+        <!-- Секция "Почему я люблю тебя" (изначально скрыта) -->
+        <div id="reasons-section" class="reasons-container">
+             <h2>Почему я люблю тебя <span class="infinity">∞</span></h2>
+            <ul id="reasons-list">
+                {/* !!! ВАЖНО: Замените этот список своими причинами !!! */}
+                <li>Твоя невероятная улыбка, которая может растопить лед. 😊</li>
+                <li>То, как ты заботишься обо всех вокруг. ❤️</li>
+                <li>Твой заразительный смех, который я обожаю слышать. 😂</li>
+                <li>Твоя мудрость и то, как ты видишь мир. 🌍</li>
+                <li>Наши уютные вечера и разговоры обо всем на свете. 🌙</li>
+                <li>То чувство дома, которое ты мне даришь. 🏡</li>
+                <li>Твоя поддержка, которая помогает мне двигаться вперед. 💪</li>
+                <li>Бесконечная нежность в твоих глазах. ✨</li>
+                {/* Добавьте столько, сколько захотите! */}
+            </ul>
+            <div class="heart-animation">💖</div>
+        </div>
 
 
-@keyframes floatElement {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    15%, 85% { opacity: 0.7; }
-    100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
-}
+        <p class="signature">
+            С безграничной любовью и нежностью,<br>
+            Навеки твой. ∞
+        </p>
+    </div>
 
-/* --- Container --- */
-.container {
-    background-color: rgba(255, 255, 255, 0.98);
-    padding: 40px 50px;
-    border-radius: 25px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0,0,0, 0.05);
-    max-width: 700px;
-    width: 90%; /* Добавлено для мобильных устройств */
-    text-align: center;
-    position: relative; /* Убедимся, что position установлено */
-    z-index: 2; /* Выше фона и канваса */
-    opacity: 0; /* Изначально скрыт */
-    transform: translateY(30px) scale(0.98);
-    /* Анимация появления (проверяем, что она применена и правильна) */
-    animation: fadeInSlideUp 1s ease-out 0.5s forwards;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-/* Проверим анимацию появления */
-@keyframes fadeInSlideUp {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-     }
-}
-
-.container:hover {
-    transform: scale(1.02) translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0,0,0, 0.08);
-}
-
-/* --- Header --- */
-header h1 {
-    font-family: 'Lobster', cursive;
-    color: var(--primary-pink);
-    font-size: 3.2em;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    line-height: 1.3;
-}
-
-.sparkle {
-    display: inline-block;
-    animation: sparklePulse 1.6s infinite ease-in-out;
-    color: var(--gold-sparkle);
-    margin: 0 8px;
-    font-size: 0.8em;
-    vertical-align: middle;
-}
-
-@keyframes sparklePulse {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    50% { transform: scale(1.5) rotate(20deg); opacity: 0.7; }
-}
-
-/* --- Main Message --- */
-.message {
-    font-size: 1.2em;
-    line-height: 1.8;
-    color: var(--text-medium);
-    margin: 25px auto 30px;
-    max-width: 90%;
-}
-
-/* --- Button --- */
-#specialButton {
-    background: linear-gradient(45deg, var(--secondary-pink), var(--primary-pink));
-    color: white;
-    border: none;
-    padding: 18px 40px;
-    font-size: 1.2em;
-    font-weight: bold;
-    border-radius: 50px;
-    cursor: pointer; /* Восстанавливаем курсор по умолчанию для кнопки */
-    margin-top: 20px;
-    margin-bottom: 40px;
-    transition: all 0.35s ease;
-    box-shadow: 0 6px 18px rgba(233, 30, 99, 0.35);
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-}
-/* Hover/Active/Disabled стили для кнопки (остаются без изменений) */
-#specialButton .button-icon { display: inline-block; transition: transform 0.3s ease; font-size: 1.1em; }
-#specialButton:hover { background: linear-gradient(45deg, var(--primary-pink), var(--secondary-pink)); transform: translateY(-5px) scale(1.06); box-shadow: 0 10px 25px rgba(233, 30, 99, 0.5); }
-#specialButton:hover .button-icon { transform: scale(1.25) rotate(-15deg); }
-#specialButton:active { transform: translateY(0) scale(1); box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); }
-#specialButton:disabled { background: #d1c4e9; color: #777; opacity: 0.8; cursor: default; transform: none; box-shadow: none; }
-#specialButton:disabled .button-icon { transform: none; }
-
-
-/* --- Базовый стиль для скрытых секций (был .hidden-section-base) --- */
-/* Этот блок больше не используется напрямую, стили скопированы ниже */
-
-/* --- Скрытое сообщение (явное копирование стилей) --- */
-.hidden-message {
-    /* --- Стили скопированы из .hidden-section-base --- */
-    background-color: var(--light-pink-bg);
-    background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fce4ec' fill-opacity='0.5' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
-    border-left: 7px solid var(--secondary-pink);
-    padding: 0 30px;
-    margin-top: 0;
-    border-radius: 15px;
-    text-align: left;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 1s cubic-bezier(0.68, -0.6, 0.27, 1.65); /* Анимация появления */
-    box-shadow: 0 5px 15px rgba(0,0,0, 0.06);
-    /* --- Конец скопированных стилей --- */
-}
-
-.hidden-message.visible {
-    opacity: 1;
-    max-height: 1000px; /* Достаточная высота */
-    margin-top: 30px;
-    padding: 30px; /* Восстанавливаем padding */
-}
-
-.hidden-message h2 {
-    font-family: 'Lobster', cursive;
-    color: var(--dark-pink);
-    text-align: center;
-    font-size: 2em;
-    margin-bottom: 25px;
-}
-
-.hidden-message p {
-    color: var(--text-medium);
-    line-height: 1.8;
-    font-size: 1.15em;
-    margin-bottom: 18px;
-}
-
-
-/* --- Секция "Причины" (явное копирование стилей) --- */
-.reasons-container {
-     /* --- Стили скопированы из .hidden-section-base --- */
-    background-color: var(--light-pink-bg);
-    background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fce4ec' fill-opacity='0.5' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
-    border-left: 7px solid var(--secondary-pink);
-    padding: 0 30px;
-    margin-top: 0;
-    border-radius: 15px;
-    text-align: left;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 1s cubic-bezier(0.68, -0.6, 0.27, 1.65); /* Анимация появления */
-    box-shadow: 0 5px 15px rgba(0,0,0, 0.06);
-    /* --- Конец скопированных стилей --- */
-    transition-delay: 0.3s; /* Небольшая задержка появления */
-}
-
-.reasons-container.visible {
-    opacity: 1;
-    max-height: 1000px; /* Достаточная высота */
-    margin-top: 30px;
-    padding: 30px; /* Восстанавливаем padding */
-}
-
-.reasons-container h2 {
-    font-family: 'Lobster', cursive;
-    color: var(--dark-pink);
-    text-align: center;
-    font-size: 2em;
-    margin-bottom: 25px;
-}
-
-
-#reasons-list {
-    list-style: none;
-    padding-left: 10px;
-    margin-top: 15px;
-}
-
-#reasons-list li {
-    color: var(--text-medium);
-    font-size: 1.1em;
-    line-height: 1.7;
-    margin-bottom: 15px;
-    padding-left: 30px;
-    position: relative;
-    opacity: 0;
-    transform: translateX(-20px);
-    /* transition задается через JS для задержки */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-#reasons-list li::before {
-    content: '💖';
-    position: absolute;
-    left: 0;
-    top: 1px;
-    font-size: 1.1em;
-    color: var(--secondary-pink);
-}
-
-.infinity {
-    display: inline-block;
-    font-size: 1.1em;
-    color: var(--primary-pink);
-    margin-left: 5px;
-    transform: translateY(2px);
-}
-
-.heart-animation {
-    font-size: 3.2em;
-    text-align: center;
-    margin-top: 30px;
-    animation: heartBeat 1.3s infinite ease-in-out;
-    color: var(--secondary-pink);
-}
-
-@keyframes heartBeat {
-    0%, 100% { transform: scale(1); }
-    10%, 30% { transform: scale(0.88); }
-    20%, 40%, 60%, 80% { transform: scale(1.18); }
-    50%, 70%, 90% { transform: scale(1.08); }
-}
-
-/* --- Signature --- */
-.signature {
-    margin-top: 45px;
-    font-family: 'Pacifico', cursive;
-    font-size: 1.25em;
-    color: var(--text-light);
-    line-height: 1.6;
-}
-
-/* --- Canvas for Confetti --- */
-#confetti-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Между фоном и контейнером */
-    pointer-events: none;
-}
-
-/* --- Mouse Trail Effect --- */
-.trail {
-    position: absolute; /* Важно использовать absolute */
-    height: 8px;
-    width: 8px;
-    border-radius: 50%;
-    background: var(--secondary-pink);
-    z-index: 5; /* Выше всего остального контента, на всякий случай */
-    pointer-events: none;
-    opacity: 1;
-    /* Добавим transform-origin для анимации */
-    transform-origin: center center;
-    animation: fadeOutTrail 0.7s linear forwards;
-}
-
-@keyframes fadeOutTrail {
-    to {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-}
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-    .container {
-        padding: 30px 20px; /* Уменьшим padding на маленьких экранах */
-        max-width: 95%; /* Чуть шире */
-    }
-    header h1 {
-        font-size: 2.4em; /* Уменьшим заголовок */
-    }
-    .message, .hidden-message p, #reasons-list li {
-        font-size: 1.05em; /* Немного уменьшим текст */
-    }
-    #specialButton {
-        padding: 16px 32px;
-        font-size: 1.1em;
-    }
-    .hidden-message h2, .reasons-container h2 {
-        font-size: 1.7em;
-    }
-    .signature {
-        font-size: 1.15em;
-    }
-    /* Уменьшим размер сердечек в трейле на мобильных (опционально) */
-    .trail {
-        height: 6px;
-        width: 6px;
-    }
-}
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
